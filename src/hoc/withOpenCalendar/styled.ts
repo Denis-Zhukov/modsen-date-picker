@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { Calendar } from '@/components/Calendar';
 
-export const StyledDatePicker = styled.div`
+export const Wrapper = styled.div`
   position: relative`;
 
 export const StyledRelativeCalendar = styled(Calendar)`

@@ -7,7 +7,7 @@ import { DateUtils } from '@/utils/DateUtils';
 
 import { StyledCalendar, StyledDays } from './styled';
 
-interface Props extends HTMLProps<HTMLDivElement>{
+export interface Props extends HTMLProps<HTMLDivElement>{
     month?: number;
     year?: number;
     onChangeMonth: (year: number, month: number) => void;

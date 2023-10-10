@@ -1,4 +1,4 @@
-import React, { useCallback, useId, useState } from 'react';
+import React, { ChangeEvent, HTMLProps, useId } from 'react';
 
 import CalendarIcon from '@/assets/icons/calendar.svg';
 import ClearIcon from '@/assets/icons/clear.svg';
@@ -10,34 +10,47 @@ import {
     StyledInput,
 } from './styled';
 
-interface Props {
-    onIconClick: () => void;
+export interface Props extends HTMLProps<HTMLDivElement> {
+    date: string;
+    onChangeDate: (date: string) => void;
+    onIconClick?: () => void;
+    onResetClick?: () => void;
+    placeholder?: string;
 }
 
-export const Field = ({ onIconClick }: Props) => {
+export const Field = ({
+    date,
+    placeholder,
+    onIconClick,
+    onResetClick,
+    onChangeDate,
+    ...props
+}: Props) => {
     const calendarId = useId();
-
-    const [date, setDate] = useState('');
-    const resetValue = useCallback(() => setDate(''), []);
+    const handleChangeDate = (e: ChangeEvent<HTMLInputElement>) => {
+        onChangeDate(e.target.value);
+    };
 
     return (
-        <StyledCalendarWrapper>
-            <StyledInput
-                type="text"
-                placeholder="Choose Date"
-                id={calendarId}
-                value={date}
-                onClick={onIconClick}
-                readOnly
-            />
-            <StyledIconLabel htmlFor={calendarId}>
+        <StyledCalendarWrapper {...props}>
+            <StyledIconLabel htmlFor={calendarId} onClick={onIconClick}>
                 <img src={CalendarIcon} alt="Calendar icon" />
             </StyledIconLabel>
-            {date && (
+
+            <StyledInput
+                type="text"
+                placeholder={placeholder}
+                id={calendarId}
+                value={date}
+                onChange={handleChangeDate}
+                readOnly
+            />
+
+            {date && onResetClick && (
                 <StyledClearIcon
                     src={ClearIcon}
                     alt="Clear"
-                    onClick={resetValue}
+                    onClick={onResetClick}
                 />
             )}
         </StyledCalendarWrapper>

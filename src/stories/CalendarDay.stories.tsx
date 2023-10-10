@@ -17,6 +17,7 @@ export default meta;
 type Story = StoryObj<typeof CalendarDay>;
 
 export const Primary: Story = {
+    name: 'default',
     render: (args) => <CalendarDay {...args} />,
     args: {
         day: 1,

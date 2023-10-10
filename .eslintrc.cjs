@@ -26,7 +26,7 @@ module.exports = {
         'indent': ['error', 4],
         'react/jsx-indent': ['error', 4],
         'react/jsx-indent-props': ['error', 4],
-        'react/function-component-definition': [2, { 'namedComponents': 'arrow-function' }],
+        'react/function-component-definition': [2, { 'namedComponents': 'arrow-function', 'unnamedComponents': 'arrow-function' }],
         'react/react-in-jsx-scope': 'off',
         'react/jsx-uses-react': 'off',
         'import/prefer-default-export': 'off',
