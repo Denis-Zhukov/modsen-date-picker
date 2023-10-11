@@ -5,6 +5,7 @@ import { MonthSelector } from '@/components/MonthSelector';
 import { DayOfWeek } from '@/constants/DayOfWeek';
 import { DateUtils } from '@/utils/DateUtils';
 
+import { CalendarUtils } from '@/utils/CalendarUtils';
 import { StyledCalendar, StyledDays } from './styled';
 
 export interface Props extends HTMLProps<HTMLDivElement> {
@@ -12,6 +13,7 @@ export interface Props extends HTMLProps<HTMLDivElement> {
     year?: number;
     onChangeMonth: (year: number, month: number) => void;
     americanStandard?: boolean;
+    range?: [Date, Date];
 }
 
 const now = new Date();
@@ -21,6 +23,7 @@ export const Calendar = ({
     year = now.getFullYear(),
     onChangeMonth,
     americanStandard = false,
+    range,
     ...props
 }: Props) => {
     const days = useMemo(
@@ -50,6 +53,10 @@ export const Calendar = ({
                         day={day}
                         key={`${day}-${monthDay}-${yearDay}`}
                         disabled={month !== monthDay}
+                        type={CalendarUtils.getTypeCalendarDay(
+                            range,
+                            new Date(yearDay, monthDay - 1, day),
+                        )}
                     />
                 ))}
             </StyledDays>
