@@ -28,6 +28,12 @@ export const Calendar = ({
         [year, month, americanStandard],
     );
 
+    const week = useMemo(() => {
+        const daysOfWeek = Object.values(DayOfWeek);
+        if (americanStandard) daysOfWeek.unshift(daysOfWeek.pop()!);
+        return daysOfWeek;
+    }, [americanStandard]);
+
     return (
         <StyledCalendar {...props}>
             <MonthSelector
@@ -36,7 +42,7 @@ export const Calendar = ({
                 onChangeMonth={onChangeMonth}
             />
             <StyledDays>
-                {Object.values(DayOfWeek).map((day) => (
+                {week.map((day) => (
                     <CalendarDay day={day} key={day} />
                 ))}
                 {days.map(({ day, month: monthDay, year: yearDay }) => (
