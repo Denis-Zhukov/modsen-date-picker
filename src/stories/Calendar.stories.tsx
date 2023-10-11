@@ -3,6 +3,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import React, { useCallback } from 'react';
 
 import { Calendar } from '@/components/Calendar';
+import { withAmericanStandard } from '@/hoc/withAmericanStandard';
 
 const meta: Meta<typeof Calendar> = {
     title: 'Calendar',
@@ -26,6 +27,24 @@ export const Default: Story = {
         }, []);
 
         return <Calendar {...args} onChangeMonth={handleChangeMonth} />;
+    },
+    args: {
+        year: 2023,
+        month: 10,
+    },
+};
+
+const AmericanCalendar = withAmericanStandard(Calendar);
+export const CalendarWithAmericanStandard: Story = {
+    name: 'with american standard',
+    render: (args) => {
+        const [, updateArgs] = useArgs();
+
+        const handleChangeMonth = useCallback((year: number, month: number) => {
+            updateArgs({ year, month });
+        }, []);
+
+        return <AmericanCalendar {...args} onChangeMonth={handleChangeMonth} />;
     },
     args: {
         year: 2023,

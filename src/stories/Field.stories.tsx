@@ -3,6 +3,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import React, { useCallback } from 'react';
 
 import { Field } from '@/components/Field';
+import { withAmericanStandard } from '@/hoc/withAmericanStandard';
 import { withOpenCalendar } from '@/hoc/withOpenCalendar';
 
 const meta: Meta<typeof Field> = {
@@ -29,7 +30,7 @@ export const Default: Story = {
 const FieldWithCalendar = withOpenCalendar(Field);
 export const WithCalendar: StoryObj<typeof FieldWithCalendar> = {
     name: 'with opening calendar',
-    render: (args) => {
+    render: ({ americanStandard, ...args }) => {
         const [, updateArgs] = useArgs();
 
         const handleChangeMonth = useCallback(
@@ -53,6 +54,7 @@ export const WithCalendar: StoryObj<typeof FieldWithCalendar> = {
                 onChangeMonth={handleChangeMonth}
                 onChangeDate={handleChangeDate}
                 onResetClick={handleResetClick}
+                americanStandard={americanStandard}
             />
         );
     },
@@ -61,6 +63,7 @@ export const WithCalendar: StoryObj<typeof FieldWithCalendar> = {
         year: 2023,
         date: '',
         placeholder: 'Choose Date',
+        americanStandard: false,
     },
     argTypes: {
         onChangeDate: {

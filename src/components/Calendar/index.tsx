@@ -7,10 +7,11 @@ import { DateUtils } from '@/utils/DateUtils';
 
 import { StyledCalendar, StyledDays } from './styled';
 
-export interface Props extends HTMLProps<HTMLDivElement>{
+export interface Props extends HTMLProps<HTMLDivElement> {
     month?: number;
     year?: number;
     onChangeMonth: (year: number, month: number) => void;
+    americanStandard?: boolean;
 }
 
 const now = new Date();
@@ -19,11 +20,12 @@ export const Calendar = ({
     month = now.getMonth() + 1,
     year = now.getFullYear(),
     onChangeMonth,
+    americanStandard = false,
     ...props
 }: Props) => {
     const days = useMemo(
-        () => DateUtils.getMonthDays(year, month),
-        [year, month],
+        () => DateUtils.getMonthDays(year, month, americanStandard),
+        [year, month, americanStandard],
     );
 
     return (
