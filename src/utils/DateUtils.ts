@@ -1,9 +1,10 @@
 export class DateUtils {
     static getMonthDays(
-        year: number,
-        month: number,
+        year: number | null,
+        month: number | null,
         isAmericanStandard = false,
     ) {
+        if (!year || !month) return [];
         const firstDay = new Date(year, month - 1, 1);
         const lastDayPrevMonth = new Date(year, month - 1, 0);
         const daysInMonth: { day: number; month: number; year: number }[] = [];
@@ -12,8 +13,8 @@ export class DateUtils {
             lastDayPrevMonth.setDate(
                 isAmericanStandard
                     ? lastDayPrevMonth.getDate() - firstDay.getDay() + 1
-                    : lastDayPrevMonth.getDate()
-                          - (firstDay.getDay() === 0 ? 5 : firstDay.getDay() - 2),
+                    : lastDayPrevMonth.getDate() -
+                          (firstDay.getDay() === 0 ? 5 : firstDay.getDay() - 2),
             ),
         );
 
@@ -41,6 +42,12 @@ export class DateUtils {
         const year2 = date2.getFullYear();
         const month2 = date2.getMonth();
         const day2 = date2.getDate();
+        if (year1 === year2 && month1 === month2 && day1 === day2) {
+            console.log('................');
+            console.log(year1, year2);
+            console.log(month1, month2);
+            console.log(day1, day2);
+        }
 
         return year1 === year2 && month1 === month2 && day1 === day2;
     }

@@ -1,76 +1,129 @@
-import { useArgs } from '@storybook/client-api';
 import { Meta, StoryObj } from '@storybook/react';
-import React, { useCallback } from 'react';
+import React, {
+    useCallback, useEffect, useMemo, useReducer,
+} from 'react';
 
-import { Field } from '@/components/Field';
-import { withAmericanStandard } from '@/hoc/withAmericanStandard';
+import { DatePickerContext } from '@/components/DatePicker/Context';
+import { datePickerReducer, State } from '@/components/DatePicker/store';
+import {
+    setCurrentDate,
+    setSelectedDate,
+} from '@/components/DatePicker/store/actions';
+import { Field, Props as FieldProps } from '@/components/Field';
 import { withOpenCalendar } from '@/hoc/withOpenCalendar';
 
 const meta: Meta<typeof Field> = {
-    title: 'Calendar field',
+    title: 'Field',
     component: Field,
 };
 
 export default meta;
-type Story = StoryObj<typeof Field>;
-export const Default: Story = {
+
+interface FieldWithExtraPropsForDefault extends FieldProps {
+    year?: number;
+    month?: number;
+    day?: number;
+}
+
+export const Default: StoryObj<FieldWithExtraPropsForDefault> = {
     name: 'default',
-    render: (args) => <Field {...args} />,
-    args: {
-        date: '',
-        placeholder: 'Choose Date',
+    render: ({
+        year, month, day, ...args
+    }) => {
+        const [state, dispatch] = useReducer(datePickerReducer, {
+            selectedYear: null,
+            selectedMonth: null,
+            selectedDay: null,
+            currentYear: year,
+            currentMonth: month,
+            currentDay: day,
+        } as State);
+
+        useEffect(() => {
+            dispatch(setSelectedDate({ year, month, day }));
+        }, [year, month, day]);
+
+        const store = useMemo(() => ({ state, dispatch }), [state, dispatch]);
+
+        return (
+            <DatePickerContext.Provider value={store}>
+                <Field {...args} />
+            </DatePickerContext.Provider>
+        );
     },
-    argTypes: {
-        onChangeDate: {
-            control: 'none',
-        },
+    args: {
+        year: 2023,
+        month: 10,
+        day: 9,
     },
 };
 
+interface FieldWithExtraPropsForWithCalendar extends FieldProps {
+    currentYear: number;
+    currentMonth: number;
+    selectedYear: number;
+    selectedMonth: number;
+    selectedDay: number;
+}
+
 const FieldWithCalendar = withOpenCalendar(Field);
-export const WithCalendar: StoryObj<typeof FieldWithCalendar> = {
-    name: 'with opening calendar',
-    render: ({ americanStandard, ...args }) => {
-        const [, updateArgs] = useArgs();
+export const WithCalendar: StoryObj<FieldWithExtraPropsForWithCalendar> = {
+    name: 'with Calendar',
+    render: ({
+        currentYear,
+        currentMonth,
+        selectedMonth,
+        selectedYear,
+        selectedDay,
+        ...args
+    }) => {
+        const [state, dispatch] = useReducer(datePickerReducer, {
+            selectedYear,
+            selectedMonth,
+            selectedDay,
+            currentYear,
+            currentMonth,
+            currentDay: 1,
+        } as State);
 
-        const handleChangeMonth = useCallback(
-            (newYear: number, newMonth: number) => {
-                updateArgs({ year: newYear, month: newMonth });
-            },
-            [],
-        );
+        useEffect(() => {
+            dispatch(
+                setSelectedDate({
+                    year: selectedYear,
+                    month: selectedMonth,
+                    day: selectedDay,
+                }),
+            );
+        }, [selectedYear, selectedMonth, selectedDay]);
 
-        const handleChangeDate = useCallback((newDate: string) => {
-            updateArgs({ date: newDate });
-        }, []);
+        useEffect(() => {
+            dispatch(
+                setCurrentDate({
+                    year: currentYear,
+                    month: currentMonth,
+                }),
+            );
+        }, [currentYear, currentMonth]);
 
-        const handleResetClick = useCallback(() => {
-            updateArgs({ date: '' });
+        const store = useMemo(() => ({ state, dispatch }), [state, dispatch]);
+        const handleChangeMonth = useCallback((year: number, month: number) => {
+            dispatch(setCurrentDate({ year, month }));
         }, []);
 
         return (
-            <FieldWithCalendar
-                {...args}
-                onChangeMonth={handleChangeMonth}
-                onChangeDate={handleChangeDate}
-                onResetClick={handleResetClick}
-                americanStandard={americanStandard}
-            />
+            <DatePickerContext.Provider value={store}>
+                <FieldWithCalendar
+                    {...args}
+                    onChangeMonth={handleChangeMonth}
+                />
+            </DatePickerContext.Provider>
         );
     },
     args: {
-        month: 10,
-        year: 2023,
-        date: '',
-        placeholder: 'Choose Date',
-        americanStandard: false,
-    },
-    argTypes: {
-        onChangeDate: {
-            control: 'none',
-        },
-        onChangeMonth: {
-            control: 'none',
-        },
+        currentYear: 2023,
+        currentMonth: 6,
+        selectedYear: 2023,
+        selectedMonth: 6,
+        selectedDay: 21,
     },
 };
