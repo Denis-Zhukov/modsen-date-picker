@@ -1,3 +1,6 @@
+import { setCurrentDate } from '@/components/DatePicker/store/actions';
+import { DayOfWeek } from '@/constants/DayOfWeek';
+
 export class DateUtils {
     static getMonthDays(
         year: number | null,
@@ -34,6 +37,12 @@ export class DateUtils {
         return daysInMonth;
     }
 
+    static getDaysOfWeek(isAmericanStandard = false) {
+        const daysOfWeek = Object.values(DayOfWeek);
+        if (isAmericanStandard) daysOfWeek.unshift(daysOfWeek.pop()!);
+        return daysOfWeek;
+    }
+
     static isSameDays(date1: Date, date2: Date) {
         const year1 = date1.getFullYear();
         const month1 = date1.getMonth();
@@ -42,13 +51,17 @@ export class DateUtils {
         const year2 = date2.getFullYear();
         const month2 = date2.getMonth();
         const day2 = date2.getDate();
-        if (year1 === year2 && month1 === month2 && day1 === day2) {
-            console.log('................');
-            console.log(year1, year2);
-            console.log(month1, month2);
-            console.log(day1, day2);
-        }
 
         return year1 === year2 && month1 === month2 && day1 === day2;
+    }
+
+    static prevMonth(year: number, month: number) {
+        if (month - 1 < 1) return { year: year - 1, month: 12 };
+        return { year, month: month - 1 };
+    }
+
+    static nextMonth(year: number, month: number) {
+        if (month + 1 > 12) return { year: year + 1, month: 1 };
+        return { year, month: month + 1 };
     }
 }

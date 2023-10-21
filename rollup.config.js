@@ -4,6 +4,7 @@ import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
 import dts from 'rollup-plugin-dts';
+import image from 'rollup-plugin-image';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
 const packageJson = require('./package.json');
@@ -19,6 +20,10 @@ export default [
             },
         ],
         plugins: [
+            image({
+                extensions: /\.(png|jpg|jpeg|gif|svg)$/,
+                limit: 10000,
+            }),
             typescript(),
             peerDepsExternal(),
             resolve(),
@@ -27,7 +32,10 @@ export default [
             commonjs(),
             alias({
                 entries: [
-                    { find: '@', replacement: './src' },
+                    {
+                        find: '@',
+                        replacement: './src',
+                    },
                 ],
             }),
         ],

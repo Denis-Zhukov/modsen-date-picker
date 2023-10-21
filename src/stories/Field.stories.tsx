@@ -1,7 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import React, {
-    useCallback, useEffect, useMemo, useReducer,
-} from 'react';
+import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
 
 import { DatePickerContext } from '@/components/DatePicker/Context';
 import { datePickerReducer, State } from '@/components/DatePicker/store';
@@ -11,6 +9,7 @@ import {
 } from '@/components/DatePicker/store/actions';
 import { Field, Props as FieldProps } from '@/components/Field';
 import { withOpenCalendar } from '@/hoc/withOpenCalendar';
+import { TypeOfCalendar } from '@/constants/TypeOfCalendar';
 
 const meta: Meta<typeof Field> = {
     title: 'Field',
@@ -27,9 +26,7 @@ interface FieldWithExtraPropsForDefault extends FieldProps {
 
 export const Default: StoryObj<FieldWithExtraPropsForDefault> = {
     name: 'default',
-    render: ({
-        year, month, day, ...args
-    }) => {
+    render: ({ year, month, day, ...args }) => {
         const [state, dispatch] = useReducer(datePickerReducer, {
             selectedYear: null,
             selectedMonth: null,
@@ -84,6 +81,8 @@ export const WithCalendar: StoryObj<FieldWithExtraPropsForWithCalendar> = {
             currentYear,
             currentMonth,
             currentDay: 1,
+            type: TypeOfCalendar.Days,
+            americanStandard: false,
         } as State);
 
         useEffect(() => {

@@ -1,6 +1,6 @@
 import styled, { css, RuleSet } from 'styled-components';
 
-import { TypeOfDay } from '@/components/CalendarDay/types';
+import type { TypeOfDay } from './types';
 
 const StylesByType: Record<TypeOfDay, RuleSet> = {
     default: css`

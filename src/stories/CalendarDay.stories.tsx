@@ -1,11 +1,11 @@
 import { Meta, StoryObj } from '@storybook/react';
 import React from 'react';
 
-import { CalendarDay } from '@/components/CalendarDay';
+import { CalendarCell } from '@/components/CalendarCell';
 
-const meta: Meta<typeof CalendarDay> = {
-    component: CalendarDay,
-    title: 'Calendar day',
+const meta: Meta<typeof CalendarCell> = {
+    component: CalendarCell,
+    title: 'Calendar cell',
     argTypes: {
         type: {
             control: { type: 'select' },
@@ -14,13 +14,13 @@ const meta: Meta<typeof CalendarDay> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof CalendarDay>;
+type Story = StoryObj<typeof CalendarCell>;
 
 export const Primary: Story = {
     name: 'default',
-    render: (args) => <CalendarDay {...args} />,
+    render: (args) => <CalendarCell {...args} />,
     args: {
-        day: 1,
+        children: 1,
         type: 'default',
         active: false,
         disabled: false,
