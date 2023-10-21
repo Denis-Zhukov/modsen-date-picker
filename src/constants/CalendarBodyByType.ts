@@ -2,6 +2,7 @@ import type { JSX } from 'react';
 
 import { Days } from '@/components/Days';
 import { Months } from '@/components/Months';
+import { Years } from '@/components/Years';
 import { TypeOfCalendar } from '@/constants/TypeOfCalendar';
 
 export const calendarBodies: Record<
@@ -10,5 +11,5 @@ export const calendarBodies: Record<
 > = {
     [TypeOfCalendar.Days]: Days,
     [TypeOfCalendar.Months]: Months,
-    [TypeOfCalendar.Years]: Days,
+    [TypeOfCalendar.Years]: Years,
 };
