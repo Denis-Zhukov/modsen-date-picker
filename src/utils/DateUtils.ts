@@ -1,4 +1,3 @@
-import { setCurrentDate } from '@/components/DatePicker/store/actions';
 import { DayOfWeek } from '@/constants/DayOfWeek';
 
 export class DateUtils {
@@ -16,8 +15,8 @@ export class DateUtils {
             lastDayPrevMonth.setDate(
                 isAmericanStandard
                     ? lastDayPrevMonth.getDate() - firstDay.getDay() + 1
-                    : lastDayPrevMonth.getDate() -
-                          (firstDay.getDay() === 0 ? 5 : firstDay.getDay() - 2),
+                    : lastDayPrevMonth.getDate()
+                          - (firstDay.getDay() === 0 ? 5 : firstDay.getDay() - 2),
             ),
         );
 
@@ -41,6 +40,15 @@ export class DateUtils {
         const daysOfWeek = Object.values(DayOfWeek);
         if (isAmericanStandard) daysOfWeek.unshift(daysOfWeek.pop()!);
         return daysOfWeek;
+    }
+
+    static getYears(currentYear: number) {
+        const startYear = Math.floor(currentYear / 10) * 10;
+        const years: number[] = [];
+
+        for (let i = -1; i < 11; i++) { years.push(startYear + i); }
+
+        return years;
     }
 
     static isSameDays(date1: Date, date2: Date) {

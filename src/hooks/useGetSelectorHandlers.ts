@@ -24,12 +24,24 @@ export const useGetSelectorHandlers = () => {
         return [handlePrev, handleNext];
     }
 
+    if (type === 'months') {
+        const handlePrev = () => {
+            dispatch(setCurrentDate({ year: currentYear - 1 }));
+        };
+
+        const handleNext = () => {
+            dispatch(setCurrentDate({ year: currentYear + 1 }));
+        };
+
+        return [handlePrev, handleNext];
+    }
+
     const handlePrev = () => {
-        dispatch(setCurrentDate({ year: currentYear - 1 }));
+        dispatch(setCurrentDate({ year: currentYear - 10 }));
     };
 
     const handleNext = () => {
-        dispatch(setCurrentDate({ year: currentYear + 1 }));
+        dispatch(setCurrentDate({ year: currentYear + 10 }));
     };
 
     return [handlePrev, handleNext];
