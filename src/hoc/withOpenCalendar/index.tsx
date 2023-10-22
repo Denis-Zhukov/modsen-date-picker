@@ -1,25 +1,31 @@
 import React, { useCallback, useState } from 'react';
 
 import type { Props as CalendarProps } from '@/components/Calendar';
-import { setCurrentDate } from '@/store/actions';
 import type { Props as FieldProps } from '@/components/Field';
 import { useDatePicker } from '@/hooks/useDatePicker';
+import { setCurrentDate } from '@/store/actions';
 
 import { StyledRelativeCalendar, Wrapper } from './styled';
 
-export const withOpenCalendar = <T extends FieldProps>(Component: React.ComponentType<T>) => ({
-    year,
-    month,
-    onChangeMonth,
-    americanStandard,
-    ...props
-}: T & CalendarProps) => {
-    const { state: { selectedYear, selectedMonth }, dispatch } = useDatePicker();
+export const withOpenCalendar = <T extends FieldProps>(Component: React.ComponentType<T>) => (
+    props: T & CalendarProps,
+) => {
+    const {
+        state: {
+            selectedYear,
+            selectedMonth,
+        },
+        dispatch,
+    } = useDatePicker();
     const [showCalendar, setShowCalendar] = useState(false);
     const handleToggleShowCalendar = useCallback(() => {
         setShowCalendar((prev) => !prev);
-        if (selectedYear && selectedMonth)
-            dispatch(setCurrentDate({ year: selectedYear, month: selectedMonth }));
+        if (selectedYear && selectedMonth) {
+            dispatch(setCurrentDate({
+                year: selectedYear,
+                month: selectedMonth,
+            }));
+        }
     }, [selectedYear, selectedMonth]);
 
     return (
@@ -28,14 +34,7 @@ export const withOpenCalendar = <T extends FieldProps>(Component: React.Componen
                 {...(props as T)}
                 onIconClick={handleToggleShowCalendar}
             />
-            {showCalendar && (
-                <StyledRelativeCalendar
-                    year={year}
-                    month={month}
-                    onChangeMonth={onChangeMonth}
-                    americanStandard={americanStandard}
-                />
-            )}
+            {showCalendar && <StyledRelativeCalendar />}
         </Wrapper>
     );
 };

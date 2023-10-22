@@ -1,10 +1,11 @@
-import type { HTMLProps } from 'react';
+import type { HTMLProps, ChangeEvent } from 'react';
 import React, { useCallback, useId } from 'react';
 
 import CalendarIcon from '@/assets/icons/calendar.svg';
 import ClearIcon from '@/assets/icons/clear.svg';
-import { resetDate } from '@/store/actions';
 import { useDatePicker } from '@/hooks/useDatePicker';
+import { resetDate, setSelectedDate } from '@/store/actions';
+import { DateUtils } from '@/utils/DateUtils';
 
 import {
     StyledCalendarWrapper,
@@ -18,9 +19,17 @@ export interface Props extends HTMLProps<HTMLDivElement> {
     placeholder?: string;
 }
 
-export const Field = ({ placeholder, onIconClick, ...props }: Props) => {
+export const Field = ({
+    placeholder,
+    onIconClick,
+    ...props
+}: Props) => {
     const {
-        state: { selectedYear, selectedMonth, selectedDay },
+        state: {
+            selectedYear,
+            selectedMonth,
+            selectedDay,
+        },
         dispatch,
     } = useDatePicker();
     const calendarId = useId();
@@ -29,25 +38,32 @@ export const Field = ({ placeholder, onIconClick, ...props }: Props) => {
         dispatch(resetDate());
     }, [dispatch]);
 
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const [year, month, day] = DateUtils.getNumberFromFormatDate(e.target.value);
+        dispatch(setSelectedDate({
+            year,
+            month,
+            day,
+        }));
+    };
+
     return (
         <StyledCalendarWrapper {...props}>
             <StyledIconLabel htmlFor={calendarId} onClick={onIconClick}>
-                <img src={CalendarIcon} alt="Calendar icon" />
+                <img src={CalendarIcon} alt='Calendar icon' />
             </StyledIconLabel>
 
             <StyledInput
-                type="text"
+                type='date'
                 placeholder={placeholder}
                 id={calendarId}
-                value={`${selectedYear ?? '????'} / ${
-                    selectedMonth ?? '??'
-                } / ${selectedDay ?? '??'}`}
-                readOnly
+                value={DateUtils.getFormatDate(selectedYear, selectedMonth, selectedDay)}
+                onChange={handleChange}
             />
 
             <StyledClearIcon
                 src={ClearIcon}
-                alt="Clear"
+                alt='Clear'
                 onClick={handleReset}
             />
         </StyledCalendarWrapper>

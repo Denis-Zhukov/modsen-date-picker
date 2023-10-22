@@ -27,4 +27,10 @@ export const StyledInput = styled.input`
   border: 1px solid #ddd;
   background: #fff;
   outline: none;
+
+  &::-webkit-inner-spin-button,
+  &::-webkit-calendar-picker-indicator {
+    display: none;
+    -webkit-appearance: none;
+  }
 `;
