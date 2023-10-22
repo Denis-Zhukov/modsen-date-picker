@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo } from 'react';
 
-import { setSelectedDate } from '@/components/DatePicker/store/actions';
+import { setSelectedDate } from '@/store/actions';
 import { useDatePicker } from '@/hooks/useDatePicker';
 import { DateUtils } from '@/utils/DateUtils';
 

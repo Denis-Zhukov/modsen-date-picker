@@ -1,4 +1,4 @@
-import { setCurrentDate } from '@/components/DatePicker/store/actions';
+import { setCurrentDate } from '@/store/actions';
 import { useDatePicker } from '@/hooks/useDatePicker';
 import { DateUtils } from '@/utils/DateUtils';
 

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 
-import { setSelectedDate } from '@/components/DatePicker/store/actions';
+import { setSelectedDate } from '@/store/actions';
 import { StyledMonthCell, StyledMonths } from '@/components/Months/styled';
 import { Month } from '@/constants/Month';
 import { monthStringToNumber } from '@/constants/MonthStringToNumber';

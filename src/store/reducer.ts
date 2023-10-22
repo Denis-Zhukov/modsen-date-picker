@@ -36,9 +36,9 @@ export const datePickerReducer = (
     case 'SET_SELECTED_DATE':
         return {
             ...state,
-            selectedYear: payload?.year ?? null,
-            selectedMonth: payload?.month ?? null,
-            selectedDay: payload?.day ?? null,
+            selectedYear: payload?.year ?? state.selectedYear,
+            selectedMonth: payload?.month ?? state.selectedMonth,
+            selectedDay: payload?.day ?? state.selectedDay,
         };
     case 'SET_CURRENT_DATE':
         return {

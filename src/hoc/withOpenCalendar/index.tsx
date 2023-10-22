@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 
 import type { Props as CalendarProps } from '@/components/Calendar';
-import { setCurrentDate } from '@/components/DatePicker/store/actions';
+import { setCurrentDate } from '@/store/actions';
 import type { Props as FieldProps } from '@/components/Field';
 import { useDatePicker } from '@/hooks/useDatePicker';
 

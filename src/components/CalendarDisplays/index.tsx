@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 
-import { setCalendarType } from '@/components/DatePicker/store/actions';
+import { setCalendarType } from '@/store/actions';
 import { TypeOfCalendar } from '@/constants/TypeOfCalendar';
 import { useDatePicker } from '@/hooks/useDatePicker';
 

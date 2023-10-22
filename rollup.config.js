@@ -11,7 +11,7 @@ const packageJson = require('./package.json');
 
 export default [
     {
-        input: 'src/index.ts',
+        input: 'src/reducer.ts',
         output: [
             {
                 file: packageJson.main,

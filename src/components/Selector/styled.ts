@@ -6,7 +6,7 @@ export const StyledMonthSelector = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  max-width: 250px;
+  width: 200px;
   font-weight: 700;
   padding: 5px 0;
 `;

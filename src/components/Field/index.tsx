@@ -3,7 +3,7 @@ import React, { useCallback, useId } from 'react';
 
 import CalendarIcon from '@/assets/icons/calendar.svg';
 import ClearIcon from '@/assets/icons/clear.svg';
-import { resetDate } from '@/components/DatePicker/store/actions';
+import { resetDate } from '@/store/actions';
 import { useDatePicker } from '@/hooks/useDatePicker';
 
 import {

@@ -1,15 +1,15 @@
 import { Meta, StoryObj } from '@storybook/react';
 import React, { useEffect, useMemo, useReducer } from 'react';
 
-import { DatePickerContext } from '@/components/DatePicker/Context';
-import { datePickerReducer, State } from '@/components/DatePicker/store';
+import { Field, Props as FieldProps } from '@/components/Field';
+import { TypeOfCalendar } from '@/constants/TypeOfCalendar';
+import { DatePickerContext } from '@/Contexts/DatePickerContext';
+import { withOpenCalendar } from '@/hoc/withOpenCalendar';
 import {
     setCurrentDate,
     setSelectedDate,
-} from '@/components/DatePicker/store/actions';
-import { Field, Props as FieldProps } from '@/components/Field';
-import { TypeOfCalendar } from '@/constants/TypeOfCalendar';
-import { withOpenCalendar } from '@/hoc/withOpenCalendar';
+} from '@/store/actions';
+import { datePickerReducer, State } from '@/store/reducer';
 
 const meta: Meta<typeof Field> = {
     title: 'Field',

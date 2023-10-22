@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 
 import { CalendarCell } from '@/components/CalendarCell';
-import { setSelectedDate } from '@/components/DatePicker/store/actions';
+import { setSelectedDate } from '@/store/actions';
 import { useDatePicker } from '@/hooks/useDatePicker';
 import { CalendarUtils } from '@/utils/CalendarUtils';
 import { DateUtils } from '@/utils/DateUtils';
