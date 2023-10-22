@@ -6,10 +6,11 @@ import { TypeOfCalendar } from '@/constants/TypeOfCalendar';
 import { DatePickerContext } from '@/contexts/DatePickerContext';
 import { withOpenCalendar } from '@/hoc/withOpenCalendar';
 import {
+    datePickerReducer,
     setCurrentDate,
     setSelectedDate,
-} from '@/store/actions';
-import { datePickerReducer, State } from '@/store/reducer';
+    State,
+} from '@/store';
 
 const meta: Meta<typeof Field> = {
     title: 'Field',
@@ -117,10 +118,6 @@ export const WithCalendar: StoryObj<FieldWithExtraPropsForWithCalendar> = {
                 }),
             );
         }, [currentYear, currentMonth]);
-
-        useEffect(() => {
-
-        }, [americanStandard]);
 
         const store = useMemo(() => ({
             state,

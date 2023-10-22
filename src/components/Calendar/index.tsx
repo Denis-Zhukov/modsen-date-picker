@@ -41,9 +41,9 @@ export const Calendar = ({
 
     return (
         <StyledCalendar {...props}>
+            <CalendarDisplays />
             <Selector />
             <CalendarBody range={range} />
-            <CalendarDisplays />
         </StyledCalendar>
     );
 };

@@ -1,10 +1,10 @@
-import type { HTMLProps, ChangeEvent } from 'react';
+import type { ChangeEvent, HTMLProps } from 'react';
 import React, { useCallback, useId } from 'react';
 
 import CalendarIcon from '@/assets/icons/calendar.svg';
 import ClearIcon from '@/assets/icons/clear.svg';
 import { useDatePicker } from '@/hooks/useDatePicker';
-import { resetDate, setSelectedDate } from '@/store/actions';
+import { resetDate, setSelectedDate } from '@/store';
 import { DateUtils } from '@/utils/DateUtils';
 
 import {
@@ -50,11 +50,11 @@ export const Field = ({
     return (
         <StyledCalendarWrapper {...props}>
             <StyledIconLabel htmlFor={calendarId} onClick={onIconClick}>
-                <img src={CalendarIcon} alt='Calendar icon' />
+                <img src={CalendarIcon} alt="Calendar icon" />
             </StyledIconLabel>
 
             <StyledInput
-                type='date'
+                type="date"
                 placeholder={placeholder}
                 id={calendarId}
                 value={DateUtils.getFormatDate(selectedYear, selectedMonth, selectedDay)}
@@ -63,7 +63,7 @@ export const Field = ({
 
             <StyledClearIcon
                 src={ClearIcon}
-                alt='Clear'
+                alt="Clear"
                 onClick={handleReset}
             />
         </StyledCalendarWrapper>
