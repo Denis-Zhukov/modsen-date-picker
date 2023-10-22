@@ -12,5 +12,5 @@ export const StyledMonths = styled.div`
 export const StyledMonthCell = styled(CalendarCell)<
     ComponentProps<typeof CalendarCell>
 >`
-    width: 100px;
+    width: 75px;
 `;

@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useReducer } from 'react';
 
 import { Field, Props as FieldProps } from '@/components/Field';
 import { TypeOfCalendar } from '@/constants/TypeOfCalendar';
-import { DatePickerContext } from '@/Contexts/DatePickerContext';
+import { DatePickerContext } from '@/contexts/DatePickerContext';
 import { withOpenCalendar } from '@/hoc/withOpenCalendar';
 import {
     setCurrentDate,
