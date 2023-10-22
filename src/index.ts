@@ -1,5 +1,5 @@
 export { Button } from './components/Button';
 export { Calendar } from './components/Calendar';
-export { CalendarDay } from './components/CalendarDay';
+export { CalendarCell } from './components/CalendarCell';
 export { Field } from './components/Field';
-export { MonthSelector } from './components/MonthSelector';
+export { Selector } from './components/Selector';

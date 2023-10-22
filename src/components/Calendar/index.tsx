@@ -2,7 +2,7 @@ import type { HTMLProps } from 'react';
 import React from 'react';
 
 import { CalendarDisplays } from '@/components/CalendarDisplays';
-import { MonthSelector } from '@/components/MonthSelector';
+import { Selector } from '@/components/Selector';
 import { calendarBodies } from '@/constants/CalendarBodyByType';
 import { useDatePicker } from '@/hooks/useDatePicker';
 
@@ -21,7 +21,7 @@ export const Calendar = ({ range, ...props }: Props) => {
 
     return (
         <StyledCalendar {...props}>
-            <MonthSelector />
+            <Selector />
             <CalendarBody range={range}/>
             <CalendarDisplays />
         </StyledCalendar>

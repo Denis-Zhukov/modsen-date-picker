@@ -12,7 +12,7 @@ import { StyledArrow, StyledMonthSelector } from './styled';
 interface Props extends HTMLProps<HTMLDivElement> {
 }
 
-export const MonthSelector = ({ ...props }: Props) => {
+export const Selector = ({ ...props }: Props) => {
     const {
         state: {
             currentMonth,

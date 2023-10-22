@@ -1,5 +1,5 @@
 import { Meta, StoryObj } from '@storybook/react';
-import React, { useCallback, useEffect, useMemo, useReducer } from 'react';
+import React, { useEffect, useMemo, useReducer } from 'react';
 
 import { DatePickerContext } from '@/components/DatePicker/Context';
 import { datePickerReducer, State } from '@/components/DatePicker/store';
@@ -8,8 +8,8 @@ import {
     setSelectedDate,
 } from '@/components/DatePicker/store/actions';
 import { Field, Props as FieldProps } from '@/components/Field';
-import { withOpenCalendar } from '@/hoc/withOpenCalendar';
 import { TypeOfCalendar } from '@/constants/TypeOfCalendar';
+import { withOpenCalendar } from '@/hoc/withOpenCalendar';
 
 const meta: Meta<typeof Field> = {
     title: 'Field',
@@ -26,7 +26,12 @@ interface FieldWithExtraPropsForDefault extends FieldProps {
 
 export const Default: StoryObj<FieldWithExtraPropsForDefault> = {
     name: 'default',
-    render: ({ year, month, day, ...args }) => {
+    render: ({
+        year,
+        month,
+        day,
+        ...args
+    }) => {
         const [state, dispatch] = useReducer(datePickerReducer, {
             selectedYear: null,
             selectedMonth: null,
@@ -37,10 +42,17 @@ export const Default: StoryObj<FieldWithExtraPropsForDefault> = {
         } as State);
 
         useEffect(() => {
-            dispatch(setSelectedDate({ year, month, day }));
+            dispatch(setSelectedDate({
+                year,
+                month,
+                day,
+            }));
         }, [year, month, day]);
 
-        const store = useMemo(() => ({ state, dispatch }), [state, dispatch]);
+        const store = useMemo(() => ({
+            state,
+            dispatch,
+        }), [state, dispatch]);
 
         return (
             <DatePickerContext.Provider value={store}>
@@ -61,6 +73,7 @@ interface FieldWithExtraPropsForWithCalendar extends FieldProps {
     selectedYear: number;
     selectedMonth: number;
     selectedDay: number;
+    americanStandard: boolean;
 }
 
 const FieldWithCalendar = withOpenCalendar(Field);
@@ -72,6 +85,7 @@ export const WithCalendar: StoryObj<FieldWithExtraPropsForWithCalendar> = {
         selectedMonth,
         selectedYear,
         selectedDay,
+        americanStandard,
         ...args
     }) => {
         const [state, dispatch] = useReducer(datePickerReducer, {
@@ -82,7 +96,7 @@ export const WithCalendar: StoryObj<FieldWithExtraPropsForWithCalendar> = {
             currentMonth,
             currentDay: 1,
             type: TypeOfCalendar.Days,
-            americanStandard: false,
+            americanStandard,
         } as State);
 
         useEffect(() => {
@@ -104,16 +118,19 @@ export const WithCalendar: StoryObj<FieldWithExtraPropsForWithCalendar> = {
             );
         }, [currentYear, currentMonth]);
 
-        const store = useMemo(() => ({ state, dispatch }), [state, dispatch]);
-        const handleChangeMonth = useCallback((year: number, month: number) => {
-            dispatch(setCurrentDate({ year, month }));
-        }, []);
+        useEffect(() => {
+
+        }, [americanStandard]);
+
+        const store = useMemo(() => ({
+            state,
+            dispatch,
+        }), [state, dispatch]);
 
         return (
             <DatePickerContext.Provider value={store}>
                 <FieldWithCalendar
                     {...args}
-                    onChangeMonth={handleChangeMonth}
                 />
             </DatePickerContext.Provider>
         );
@@ -124,5 +141,6 @@ export const WithCalendar: StoryObj<FieldWithExtraPropsForWithCalendar> = {
         selectedYear: 2023,
         selectedMonth: 6,
         selectedDay: 21,
+        americanStandard: false,
     },
 };
