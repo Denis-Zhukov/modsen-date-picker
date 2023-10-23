@@ -8,9 +8,13 @@ import { DateUtils } from '@/utils/DateUtils';
 
 import { StyledYear, StyledYears } from './styled';
 
-export const Years = ({ min, max, range, onDateClick }: CalendarBodyProps) => {
+export const Years = ({
+    min, max, range, onDateClick,
+}: CalendarBodyProps) => {
     const {
-        state: { currentYear, selectedYear, selectedMonth, selectedDay },
+        state: {
+            currentYear, selectedYear, selectedMonth, selectedDay,
+        },
         dispatch,
     } = useDatePicker();
 

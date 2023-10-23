@@ -9,14 +9,19 @@ export class DateUtils {
         if (!year || !month) return [];
         const firstDay = new Date(year, month - 1, 1);
         const lastDayPrevMonth = new Date(year, month - 1, 0);
-        const daysInMonth: { day: number; month: number; year: number }[] = [];
+        const daysInMonth: {
+            day: number;
+            month: number;
+            year: number;
+            isHoliday: boolean;
+        }[] = [];
 
         const day = new Date(
             lastDayPrevMonth.setDate(
                 isAmericanStandard
                     ? lastDayPrevMonth.getDate() - firstDay.getDay() + 1
                     : lastDayPrevMonth.getDate()
-                    - (firstDay.getDay() === 0 ? 5 : firstDay.getDay() - 2),
+                          - (firstDay.getDay() === 0 ? 5 : firstDay.getDay() - 2),
             ),
         );
 
@@ -25,10 +30,12 @@ export class DateUtils {
 
         const lastDay = new Date(year, month, 0);
         while (day < lastDay || daysInMonth.length < maxRow * countDaysOfWeek) {
+            const dayOfWeek = day.getDay();
             daysInMonth.push({
                 day: day.getDate(),
                 month: day.getMonth() + 1,
                 year: day.getFullYear(),
+                isHoliday: dayOfWeek === 0 || dayOfWeek === 6,
             });
             day.setDate(day.getDate() + 1);
         }
@@ -53,7 +60,11 @@ export class DateUtils {
         return years;
     }
 
-    static getFormatDate(year: number | null, month: number | null, day: number | null): string {
+    static getFormatDate(
+        year: number | null,
+        month: number | null,
+        day: number | null,
+    ): string {
         if (!year || !month || !day) {
             return '';
         }

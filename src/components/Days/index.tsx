@@ -3,14 +3,20 @@ import React, { useCallback, useMemo } from 'react';
 import { CalendarCell } from '@/components/CalendarCell';
 import { useDatePicker } from '@/hooks/useDatePicker';
 import { setSelectedDate } from '@/store/actions';
-import { CalendarBodyProps } from '@/typing';
+import type { CalendarBodyProps } from '@/typing';
 import { CalendarUtils } from '@/utils/CalendarUtils';
 import { DateUtils } from '@/utils/DateUtils';
 
 import { StyledDays } from './styled';
-import { logDOM } from '@storybook/testing-library';
 
-export const Days = ({ min, max, range, onDateClick }: CalendarBodyProps) => {
+export const Days = ({
+    holidays,
+    withHolidays,
+    min,
+    max,
+    range,
+    onDateClick,
+}: CalendarBodyProps) => {
     const {
         state: {
             currentYear,
@@ -29,8 +35,7 @@ export const Days = ({ min, max, range, onDateClick }: CalendarBodyProps) => {
     );
 
     const days = useMemo(
-        () =>
-            DateUtils.getMonthDays(currentYear, currentMonth, americanStandard),
+        () => DateUtils.getMonthDays(currentYear, currentMonth, americanStandard),
         [currentYear, currentMonth, americanStandard],
     );
 
@@ -55,20 +60,31 @@ export const Days = ({ min, max, range, onDateClick }: CalendarBodyProps) => {
             {week.map((day) => (
                 <CalendarCell key={day}>{day}</CalendarCell>
             ))}
-            {days.map(({ day: dayCell, month: monthCell, year: yearCell }) => {
-                const date = new Date(yearCell, monthCell - 1, dayCell);
-                return (
-                    <CalendarCell
-                        onClick={handleClick(yearCell, monthCell, dayCell)}
-                        key={`${dayCell}-${monthCell}-${yearCell}`}
-                        active={DateUtils.isSameDays(date, selectedDate)}
-                        disabled={monthCell !== currentMonth}
-                        type={CalendarUtils.getTypeCalendarDay(range, date)}
-                    >
-                        {dayCell}
-                    </CalendarCell>
-                );
-            })}
+            {days.map(
+                ({
+                    day: dayCell,
+                    month: monthCell,
+                    year: yearCell,
+                    isHoliday,
+                }) => {
+                    const date = new Date(yearCell, monthCell - 1, dayCell);
+                    return (
+                        <CalendarCell
+                            holiday={
+                                (withHolidays && isHoliday)
+                                || holidays?.some((holiday) => DateUtils.isSameDays(holiday, date))
+                            }
+                            onClick={handleClick(yearCell, monthCell, dayCell)}
+                            key={`${dayCell}-${monthCell}-${yearCell}`}
+                            active={DateUtils.isSameDays(date, selectedDate)}
+                            disabled={monthCell !== currentMonth}
+                            type={CalendarUtils.getTypeCalendarDay(range, date)}
+                        >
+                            {dayCell}
+                        </CalendarCell>
+                    );
+                },
+            )}
         </StyledDays>
     );
 };

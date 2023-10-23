@@ -2,6 +2,7 @@ import { Meta, StoryObj } from '@storybook/react';
 import React, { useEffect, useMemo, useReducer } from 'react';
 
 import { Field, Props as FieldProps } from '@/components/Field';
+import { calendarBodies } from '@/constants/CalendarBodyByType';
 import { TypeOfCalendar } from '@/constants/TypeOfCalendar';
 import { DatePickerContext } from '@/contexts/DatePickerContext';
 import { withOpenCalendar } from '@/hoc/withOpenCalendar';
@@ -28,10 +29,7 @@ interface FieldWithExtraPropsForDefault extends FieldProps {
 export const Default: StoryObj<FieldWithExtraPropsForDefault> = {
     name: 'default',
     render: ({
-        year,
-        month,
-        day,
-        ...args
+        year, month, day, ...args
     }) => {
         const [state, dispatch] = useReducer(datePickerReducer, {
             selectedYear: null,
@@ -43,17 +41,22 @@ export const Default: StoryObj<FieldWithExtraPropsForDefault> = {
         } as State);
 
         useEffect(() => {
-            dispatch(setSelectedDate({
-                year,
-                month,
-                day,
-            }));
+            dispatch(
+                setSelectedDate({
+                    year,
+                    month,
+                    day,
+                }),
+            );
         }, [year, month, day]);
 
-        const store = useMemo(() => ({
-            state,
-            dispatch,
-        }), [state, dispatch]);
+        const store = useMemo(
+            () => ({
+                state,
+                dispatch,
+            }),
+            [state, dispatch],
+        );
 
         return (
             <DatePickerContext.Provider value={store}>
@@ -119,15 +122,22 @@ export const WithCalendar: StoryObj<FieldWithExtraPropsForWithCalendar> = {
             );
         }, [currentYear, currentMonth]);
 
-        const store = useMemo(() => ({
-            state,
-            dispatch,
-        }), [state, dispatch]);
+        const store = useMemo(
+            () => ({
+                state,
+                dispatch,
+            }),
+            [state, dispatch],
+        );
 
         return (
             <DatePickerContext.Provider value={store}>
                 <FieldWithCalendar
                     {...args}
+                    render={(type) => {
+                        const CalendarBody = calendarBodies[type];
+                        return <CalendarBody />;
+                    }}
                 />
             </DatePickerContext.Provider>
         );

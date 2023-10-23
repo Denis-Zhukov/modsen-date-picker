@@ -4,11 +4,12 @@ import type { Props as CalendarProps } from '@/components/Calendar';
 import type { Props as FieldProps } from '@/components/Field';
 import { useDatePicker } from '@/hooks/useDatePicker';
 import { setCurrentDate } from '@/store/actions';
+import { CalendarBodyProps } from '@/typing';
 
 import { StyledRelativeCalendar, Wrapper } from './styled';
 
 export const withOpenCalendar = <T extends FieldProps>(Component: React.ComponentType<T>) => (
-    props: T & CalendarProps,
+    { render, ...props }: T & CalendarProps & CalendarBodyProps,
 ) => {
     const {
         state: {
@@ -34,7 +35,7 @@ export const withOpenCalendar = <T extends FieldProps>(Component: React.Componen
                 {...(props as T)}
                 onIconClick={handleToggleShowCalendar}
             />
-            {showCalendar && <StyledRelativeCalendar />}
+            {showCalendar && <StyledRelativeCalendar render={render} />}
         </Wrapper>
     );
 };

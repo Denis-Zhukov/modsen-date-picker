@@ -8,6 +8,7 @@ export interface Props extends HTMLProps<HTMLDivElement> {
     disabled?: boolean;
     active?: boolean;
     type?: TypeOfDay;
+    holiday?: boolean;
 }
 
 export const CalendarCell = ({
@@ -15,9 +16,16 @@ export const CalendarCell = ({
     disabled = false,
     active = false,
     type = 'default',
+    holiday = false,
     ...props
 }: Props) => (
-    <StyledDay $disabled={disabled} $active={active} $type={type} {...props}>
+    <StyledDay
+        $disabled={disabled}
+        $active={active}
+        $type={type}
+        $holiday={holiday}
+        {...props}
+    >
         {children}
     </StyledDay>
 );

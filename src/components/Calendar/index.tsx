@@ -10,10 +10,21 @@ import { setCurrentDate } from '@/store';
 import { StyledCalendar } from './styled';
 
 export interface Props extends HTMLProps<HTMLDivElement> {
-    render: (type: TypeOfCalendar) => ReactNode;
+    render: (
+        type: TypeOfCalendar,
+        withHolidays?: boolean,
+        holidays?: Date[],
+    ) => ReactNode;
+    holidays?: Date[];
+    withHolidays?: boolean;
 }
 
-export const Calendar = ({ render, ...props }: Props) => {
+export const Calendar = ({
+    render,
+    holidays,
+    withHolidays = false,
+    ...props
+}: Props) => {
     const {
         state: {
             type, selectedYear, selectedMonth, selectedDay,
@@ -37,7 +48,7 @@ export const Calendar = ({ render, ...props }: Props) => {
         <StyledCalendar {...props}>
             <CalendarDisplays />
             <Selector />
-            {render(type)}
+            {render(type, withHolidays, holidays)}
         </StyledCalendar>
     );
 };

@@ -29,11 +29,13 @@ interface CalendarWithExtraProps extends FieldProps {
     selectedMonth: number;
     selectedDay: number;
     americanStandard: boolean;
+    withHolidays: boolean;
 }
 
 export const Default: StoryObj<CalendarWithExtraProps> = {
     name: 'default',
     render: ({
+        withHolidays,
         currentYear,
         currentMonth,
         selectedMonth,
@@ -79,14 +81,14 @@ export const Default: StoryObj<CalendarWithExtraProps> = {
             }),
             [state, dispatch],
         );
-
         return (
             <DatePickerContext.Provider value={store}>
                 <Calendar
                     {...args}
-                    render={(type) => {
+                    withHolidays={withHolidays}
+                    render={(type, withHolidays) => {
                         const CalendarBody = calendarBodies[type];
-                        return <CalendarBody />;
+                        return <CalendarBody withHolidays={withHolidays}/>;
                     }}
                 />
             </DatePickerContext.Provider>
@@ -102,7 +104,9 @@ export const Default: StoryObj<CalendarWithExtraProps> = {
     },
 };
 
-export const CalendarWithRange: StoryObj<CalendarWithExtraProps & { range: [Date, Date] }> = {
+export const CalendarWithRange: StoryObj<
+    CalendarWithExtraProps & { range: [Date, Date] }
+> = {
     name: 'with range',
     render: ({
         currentYear,
@@ -248,10 +252,12 @@ export const CalendarWithAddingTask: StoryObj<CalendarWithExtraProps> = {
     },
 };
 
-export const CalendarWithMinMax: StoryObj<CalendarWithExtraProps & {
-    min: any,
-    max: any
-}> = {
+export const CalendarWithMinMax: StoryObj<
+    CalendarWithExtraProps & {
+        min: Date;
+        max: Date;
+    }
+> = {
     name: 'with min&max date',
     render({
         currentYear,
@@ -321,8 +327,14 @@ export const CalendarWithMinMax: StoryObj<CalendarWithExtraProps & {
         selectedMonth: 6,
         selectedDay: 21,
         americanStandard: false,
-        min: new Date(2023, 5, 1),
-        max: new Date(2023, 5, 20),
+        min: new Date(2023, 5, 1) as
+            | (string & Date)
+            | (number & Date)
+            | undefined,
+        max: new Date(2023, 5, 20) as
+            | (string & Date)
+            | (number & Date)
+            | undefined,
     },
     argTypes: {
         min: { control: { type: 'date' } },
