@@ -28,7 +28,7 @@ export class DateUtils {
             daysInMonth.push({
                 day: day.getDate(),
                 month: day.getMonth() + 1,
-                year,
+                year: day.getFullYear(),
             });
             day.setDate(day.getDate() + 1);
         }
@@ -80,6 +80,16 @@ export class DateUtils {
         const day2 = date2.getDate();
 
         return year1 === year2 && month1 === month2 && day1 === day2;
+    }
+
+    static isSameMonths(date1: Date, date2: Date) {
+        const year1 = date1.getFullYear();
+        const month1 = date1.getMonth();
+
+        const year2 = date2.getFullYear();
+        const month2 = date2.getMonth();
+
+        return year1 === year2 && month1 === month2;
     }
 
     static prevMonth(year: number, month: number) {

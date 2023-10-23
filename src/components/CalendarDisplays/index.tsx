@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 
-import { setCalendarType } from '@/store/actions';
 import { TypeOfCalendar } from '@/constants/TypeOfCalendar';
 import { useDatePicker } from '@/hooks/useDatePicker';
+import { setCalendarType } from '@/store/actions';
 
 import { StyledType, StyledTypes } from './styled';
 
@@ -12,7 +12,10 @@ export const CalendarDisplays = () => {
         dispatch,
     } = useDatePicker();
 
-    const handleClick = useCallback((type: TypeOfCalendar) => () => dispatch(setCalendarType(type)), []);
+    const handleClick = useCallback(
+        (type: TypeOfCalendar) => () => dispatch(setCalendarType(type)),
+        [],
+    );
 
     const types = Object.values(TypeOfCalendar);
     return (

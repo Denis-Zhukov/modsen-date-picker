@@ -1,18 +1,15 @@
 import React, { useCallback, useMemo } from 'react';
 
 import { CalendarCell } from '@/components/CalendarCell';
-import { setSelectedDate } from '@/store/actions';
 import { useDatePicker } from '@/hooks/useDatePicker';
+import { setSelectedDate } from '@/store/actions';
+import { CalendarBodyProps } from '@/typing';
 import { CalendarUtils } from '@/utils/CalendarUtils';
 import { DateUtils } from '@/utils/DateUtils';
 
 import { StyledDays } from './styled';
 
-interface Props {
-    range?: [Date, Date];
-}
-
-export const Days = ({ range }: Props) => {
+export const Days = ({ range, onDateClick }: CalendarBodyProps) => {
     const {
         state: {
             currentYear,
@@ -25,7 +22,10 @@ export const Days = ({ range }: Props) => {
         dispatch,
     } = useDatePicker();
 
-    const week = useMemo(() => DateUtils.getDaysOfWeek(americanStandard), [americanStandard]);
+    const week = useMemo(
+        () => DateUtils.getDaysOfWeek(americanStandard),
+        [americanStandard],
+    );
 
     const days = useMemo(
         () => DateUtils.getMonthDays(currentYear, currentMonth, americanStandard),
@@ -38,8 +38,11 @@ export const Days = ({ range }: Props) => {
     );
 
     const handleClick = useCallback(
-        (year: number, month: number, day: number) => () => dispatch(setSelectedDate({ year, month, day })),
-        [],
+        (year: number, month: number, day: number) => () => {
+            dispatch(setSelectedDate({ year, month, day }));
+            onDateClick?.(year, month, day);
+        },
+        [days],
     );
 
     return (
@@ -47,20 +50,20 @@ export const Days = ({ range }: Props) => {
             {week.map((day) => (
                 <CalendarCell key={day}>{day}</CalendarCell>
             ))}
-            {days.map(({ day: dayCell, month: monthCell, year: yearCell }) => (
-                <CalendarCell
-                    onClick={handleClick(yearCell, monthCell, dayCell)}
-                    key={`${dayCell}-${monthCell}-${yearCell}`}
-                    active={DateUtils.isSameDays(
-                        new Date(yearCell, monthCell - 1, dayCell),
-                        selectedDate,
-                    )}
-                    disabled={monthCell !== currentMonth}
-                    type={CalendarUtils.getTypeCalendarDay(range, selectedDate)}
-                >
-                    {dayCell}
-                </CalendarCell>
-            ))}
+            {days.map(({ day: dayCell, month: monthCell, year: yearCell }) => {
+                const date = new Date(yearCell, monthCell - 1, dayCell);
+                return (
+                    <CalendarCell
+                        onClick={handleClick(yearCell, monthCell, dayCell)}
+                        key={`${dayCell}-${monthCell}-${yearCell}`}
+                        active={DateUtils.isSameDays(date, selectedDate)}
+                        disabled={monthCell !== currentMonth}
+                        type={CalendarUtils.getTypeCalendarDay(range, date)}
+                    >
+                        {dayCell}
+                    </CalendarCell>
+                );
+            })}
         </StyledDays>
     );
 };

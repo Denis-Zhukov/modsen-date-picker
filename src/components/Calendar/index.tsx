@@ -1,41 +1,35 @@
-import type { HTMLProps } from 'react';
+import type { HTMLProps, ReactNode } from 'react';
 import React, { useEffect } from 'react';
 
 import { CalendarDisplays } from '@/components/CalendarDisplays';
 import { Selector } from '@/components/Selector';
-import { calendarBodies } from '@/constants/CalendarBodyByType';
+import { TypeOfCalendar } from '@/constants/TypeOfCalendar';
 import { useDatePicker } from '@/hooks/useDatePicker';
 import { setCurrentDate } from '@/store';
 
 import { StyledCalendar } from './styled';
 
 export interface Props extends HTMLProps<HTMLDivElement> {
-    range?: [Date, Date];
+    render: (type: TypeOfCalendar) => ReactNode;
 }
 
-export const Calendar = ({
-    range,
-    ...props
-}: Props) => {
+export const Calendar = ({ render, ...props }: Props) => {
     const {
         state: {
-            type,
-            selectedYear,
-            selectedMonth,
-            selectedDay,
+            type, selectedYear, selectedMonth, selectedDay,
         },
         dispatch,
     } = useDatePicker();
 
-    const CalendarBody = calendarBodies[type];
-
     useEffect(() => {
         if (selectedYear && selectedMonth && selectedDay) {
-            dispatch(setCurrentDate({
-                year: selectedYear,
-                month: selectedMonth,
-                day: selectedDay,
-            }));
+            dispatch(
+                setCurrentDate({
+                    year: selectedYear,
+                    month: selectedMonth,
+                    day: selectedDay,
+                }),
+            );
         }
     }, [selectedYear, selectedMonth, selectedYear, type]);
 
@@ -43,7 +37,7 @@ export const Calendar = ({
         <StyledCalendar {...props}>
             <CalendarDisplays />
             <Selector />
-            <CalendarBody range={range} />
+            {render(type)}
         </StyledCalendar>
     );
 };
