@@ -8,7 +8,9 @@ import { setSelectedDate } from '@/store/actions';
 import { CalendarBodyProps } from '@/typing';
 import { CalendarUtils } from '@/utils/CalendarUtils';
 
-export const Months = ({ range, onDateClick }: CalendarBodyProps) => {
+export const Months = ({
+    min, max, range, onDateClick,
+}: CalendarBodyProps) => {
     const {
         state: {
             currentYear, selectedMonth, selectedDay, selectedYear,
@@ -19,6 +21,9 @@ export const Months = ({ range, onDateClick }: CalendarBodyProps) => {
 
     const handleClick = useCallback(
         (year: number, month: number) => () => {
+            const newDate = new Date(year, month - 1, 1);
+            if (min && newDate < min) return;
+            if (max && newDate > max) return;
             dispatch(
                 setSelectedDate({
                     year,
@@ -28,7 +33,7 @@ export const Months = ({ range, onDateClick }: CalendarBodyProps) => {
             );
             onDateClick?.(year, month + 1, selectedDay!);
         },
-        [selectedDay],
+        [selectedDay, min, max],
     );
 
     return (

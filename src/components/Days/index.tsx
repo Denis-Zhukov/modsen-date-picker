@@ -8,8 +8,9 @@ import { CalendarUtils } from '@/utils/CalendarUtils';
 import { DateUtils } from '@/utils/DateUtils';
 
 import { StyledDays } from './styled';
+import { logDOM } from '@storybook/testing-library';
 
-export const Days = ({ range, onDateClick }: CalendarBodyProps) => {
+export const Days = ({ min, max, range, onDateClick }: CalendarBodyProps) => {
     const {
         state: {
             currentYear,
@@ -28,7 +29,8 @@ export const Days = ({ range, onDateClick }: CalendarBodyProps) => {
     );
 
     const days = useMemo(
-        () => DateUtils.getMonthDays(currentYear, currentMonth, americanStandard),
+        () =>
+            DateUtils.getMonthDays(currentYear, currentMonth, americanStandard),
         [currentYear, currentMonth, americanStandard],
     );
 
@@ -39,10 +41,13 @@ export const Days = ({ range, onDateClick }: CalendarBodyProps) => {
 
     const handleClick = useCallback(
         (year: number, month: number, day: number) => () => {
+            const newDate = new Date(year, month - 1, day);
+            if (min && newDate < min) return;
+            if (max && newDate > max) return;
             dispatch(setSelectedDate({ year, month, day }));
             onDateClick?.(year, month, day);
         },
-        [days],
+        [days, min, max],
     );
 
     return (
