@@ -23,6 +23,6 @@ import { Calendar,
 ```
 
 ## Resources
-   npm: link
+   npm: https://www.npmjs.com/package/@hachiko_/modsen-date-picker
 
    storybook: https://modsen-date-picker.vercel.app
