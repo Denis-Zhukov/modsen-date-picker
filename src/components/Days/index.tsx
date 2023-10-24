@@ -68,6 +68,7 @@ export const Days = ({
                     isHoliday,
                 }) => {
                     const date = new Date(yearCell, monthCell - 1, dayCell);
+                    console.debug(date, range);
                     return (
                         <CalendarCell
                             holiday={

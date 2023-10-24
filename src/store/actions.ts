@@ -9,7 +9,7 @@ export type Action =
       }
     | {
           type: 'SET_CURRENT_DATE';
-          payload: PartialDate;
+          payload: Omit<PartialDate, 'day'>;
       }
     | {
           type: 'RESET_DATE';
@@ -18,6 +18,10 @@ export type Action =
     | {
           type: 'SET_CALENDAR_TYPE';
           payload: TypeOfCalendar;
+      }
+    | {
+          type: 'SET_AMERICAN_STANDARD';
+          payload: boolean;
       };
 
 export const setSelectedDate = (payload: PartialDate): Action => ({
@@ -37,5 +41,10 @@ export const resetDate = (): Action => ({
 
 export const setCalendarType = (payload: TypeOfCalendar): Action => ({
     type: 'SET_CALENDAR_TYPE',
+    payload,
+});
+
+export const setAmericanStandard = (payload: boolean): Action => ({
+    type: 'SET_AMERICAN_STANDARD',
     payload,
 });

@@ -1,5 +1,13 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import React, { useEffect, useMemo, useReducer } from 'react';
+import { useArgs } from '@storybook/client-api';
+import type {
+    Meta,
+    ReactRenderer,
+    StoryContext,
+    StoryObj,
+} from '@storybook/react';
+import React, {
+    ReactNode, useEffect, useMemo, useReducer,
+} from 'react';
 
 import { Calendar } from '@/components/Calendar';
 import { Props as FieldProps } from '@/components/Field';
@@ -8,7 +16,7 @@ import { TypeOfCalendar } from '@/constants/TypeOfCalendar';
 import { DatePickerContext } from '@/contexts/DatePickerContext';
 import { withAddingTasks } from '@/hoc/withAddingTasks';
 import {
-    datePickerReducer,
+    datePickerReducer, setAmericanStandard,
     setCurrentDate,
     setSelectedDate,
     State,
@@ -30,70 +38,124 @@ interface CalendarWithExtraProps extends FieldProps {
     selectedDay: number;
     americanStandard: boolean;
     withHolidays: boolean;
+    range?: [Date, Date];
+    render?: (
+        type: TypeOfCalendar,
+        withHolidays?: boolean,
+        holidays?: Date[],
+    ) => ReactNode;
+    minDate: Date;
+    maxDate: Date;
 }
+
+const commonRender: (
+    args: CalendarWithExtraProps,
+    context: StoryContext<CalendarWithExtraProps>,
+) => (ReactRenderer & {
+    T: CalendarWithExtraProps;
+})['storyResult'] = ({
+    withHolidays,
+    currentYear,
+    currentMonth,
+    selectedMonth,
+    selectedYear,
+    selectedDay,
+    americanStandard,
+    range,
+    render,
+    minDate,
+    maxDate,
+    ...args
+}) => {
+    const [state, dispatch] = useReducer(datePickerReducer, {
+        selectedYear,
+        selectedMonth,
+        selectedDay,
+        currentYear,
+        currentMonth,
+        americanStandard,
+        type: TypeOfCalendar.Days,
+    } as State);
+
+    const [, updateArgs] = useArgs();
+
+    useEffect(() => {
+        dispatch(
+            setSelectedDate({
+                year: selectedYear,
+                month: selectedMonth,
+                day: selectedDay,
+            }),
+        );
+    }, [
+        selectedYear,
+        selectedMonth,
+        selectedDay,
+    ]);
+
+    useEffect(() => {
+        updateArgs({
+            selectedYear: state.selectedYear,
+            selectedMonth: state.selectedMonth,
+            selectedDay: state.selectedDay,
+        });
+    }, [state.selectedYear, state.selectedMonth, state.selectedDay]);
+
+    useEffect(() => {
+        dispatch(
+            setCurrentDate({
+                year: currentYear,
+                month: currentMonth,
+            }),
+        );
+    }, [currentYear, currentMonth]);
+
+    useEffect(() => {
+        updateArgs({
+            currentYear: state.currentYear,
+            currentMonth: state.currentMonth,
+        });
+    }, [state.currentYear, state.currentMonth]);
+
+    useEffect(() => {
+        dispatch(setAmericanStandard(americanStandard));
+    }, [americanStandard]);
+
+    const store = useMemo(
+        () => ({
+            state,
+            dispatch,
+        }),
+        [state, dispatch],
+    );
+
+    return (
+        <DatePickerContext.Provider value={store}>
+            <Calendar
+                {...args}
+                withHolidays={withHolidays}
+                render={
+                    render
+                    ?? ((type, withHolidays) => {
+                        const CalendarBody = calendarBodies[type];
+                        return (
+                            <CalendarBody
+                                withHolidays={withHolidays}
+                                range={range}
+                                min={minDate}
+                                max={maxDate}
+                            />
+                        );
+                    })
+                }
+            />
+        </DatePickerContext.Provider>
+    );
+};
 
 export const Default: StoryObj<CalendarWithExtraProps> = {
     name: 'default',
-    render: ({
-        withHolidays,
-        currentYear,
-        currentMonth,
-        selectedMonth,
-        selectedYear,
-        selectedDay,
-        americanStandard,
-        ...args
-    }) => {
-        const [state, dispatch] = useReducer(datePickerReducer, {
-            selectedYear,
-            selectedMonth,
-            selectedDay,
-            currentYear,
-            currentMonth,
-            currentDay: 1,
-            type: TypeOfCalendar.Days,
-            americanStandard,
-        } as State);
-
-        useEffect(() => {
-            dispatch(
-                setSelectedDate({
-                    year: selectedYear,
-                    month: selectedMonth,
-                    day: selectedDay,
-                }),
-            );
-        }, [selectedYear, selectedMonth, selectedDay]);
-
-        useEffect(() => {
-            dispatch(
-                setCurrentDate({
-                    year: currentYear,
-                    month: currentMonth,
-                }),
-            );
-        }, [currentYear, currentMonth]);
-
-        const store = useMemo(
-            () => ({
-                state,
-                dispatch,
-            }),
-            [state, dispatch],
-        );
-        return (
-            <DatePickerContext.Provider value={store}>
-                <Calendar
-                    {...args}
-                    withHolidays={withHolidays}
-                    render={(type, withHolidays) => {
-                        const CalendarBody = calendarBodies[type];
-                        return <CalendarBody withHolidays={withHolidays}/>;
-                    }}
-                />
-            </DatePickerContext.Provider>
-        );
-    },
+    render: commonRender,
     args: {
         currentYear: 2023,
         currentMonth: 6,
@@ -108,66 +170,7 @@ export const CalendarWithRange: StoryObj<
     CalendarWithExtraProps & { range: [Date, Date] }
 > = {
     name: 'with range',
-    render: ({
-        currentYear,
-        currentMonth,
-        selectedMonth,
-        selectedYear,
-        selectedDay,
-        range,
-        americanStandard,
-        ...args
-    }) => {
-        const [state, dispatch] = useReducer(datePickerReducer, {
-            selectedYear,
-            selectedMonth,
-            selectedDay,
-            currentYear,
-            currentMonth,
-            currentDay: 1,
-            type: TypeOfCalendar.Days,
-            americanStandard,
-        } as State);
-
-        useEffect(() => {
-            dispatch(
-                setSelectedDate({
-                    year: selectedYear,
-                    month: selectedMonth,
-                    day: selectedDay,
-                }),
-            );
-        }, [selectedYear, selectedMonth, selectedDay]);
-
-        useEffect(() => {
-            dispatch(
-                setCurrentDate({
-                    year: currentYear,
-                    month: currentMonth,
-                }),
-            );
-        }, [currentYear, currentMonth]);
-
-        const store = useMemo(
-            () => ({
-                state,
-                dispatch,
-            }),
-            [state, dispatch],
-        );
-
-        return (
-            <DatePickerContext.Provider value={store}>
-                <Calendar
-                    {...args}
-                    render={(type) => {
-                        const CalendarBody = calendarBodies[type];
-                        return <CalendarBody range={range} />;
-                    }}
-                />
-            </DatePickerContext.Provider>
-        );
-    },
+    render: commonRender,
     args: {
         currentYear: 2023,
         currentMonth: 6,
@@ -181,67 +184,7 @@ export const CalendarWithRange: StoryObj<
 
 export const CalendarWithAddingTask: StoryObj<CalendarWithExtraProps> = {
     name: 'with adding task',
-    render: ({
-        currentYear,
-        currentMonth,
-        selectedMonth,
-        selectedYear,
-        selectedDay,
-        americanStandard,
-        ...args
-    }) => {
-        const [state, dispatch] = useReducer(datePickerReducer, {
-            selectedYear,
-            selectedMonth,
-            selectedDay,
-            currentYear,
-            currentMonth,
-            currentDay: 1,
-            type: TypeOfCalendar.Days,
-            americanStandard,
-        } as State);
-
-        useEffect(() => {
-            dispatch(
-                setSelectedDate({
-                    year: selectedYear,
-                    month: selectedMonth,
-                    day: selectedDay,
-                }),
-            );
-        }, [selectedYear, selectedMonth, selectedDay]);
-
-        useEffect(() => {
-            dispatch(
-                setCurrentDate({
-                    year: currentYear,
-                    month: currentMonth,
-                }),
-            );
-        }, [currentYear, currentMonth]);
-
-        const store = useMemo(
-            () => ({
-                state,
-                dispatch,
-            }),
-            [state, dispatch],
-        );
-
-        return (
-            <DatePickerContext.Provider value={store}>
-                <Calendar
-                    {...args}
-                    render={(type) => {
-                        const CalendarBody = withAddingTasks(
-                            calendarBodies[type],
-                        );
-                        return <CalendarBody />;
-                    }}
-                />
-            </DatePickerContext.Provider>
-        );
-    },
+    render: commonRender,
     args: {
         currentYear: 2023,
         currentMonth: 6,
@@ -249,6 +192,10 @@ export const CalendarWithAddingTask: StoryObj<CalendarWithExtraProps> = {
         selectedMonth: 6,
         selectedDay: 21,
         americanStandard: false,
+        render: (type, withHolidays) => {
+            const CalendarBody = withAddingTasks(calendarBodies[type]);
+            return <CalendarBody withHolidays={withHolidays} />;
+        },
     },
 };
 
@@ -259,67 +206,7 @@ export const CalendarWithMinMax: StoryObj<
     }
 > = {
     name: 'with min&max date',
-    render({
-        currentYear,
-        currentMonth,
-        selectedMonth,
-        selectedYear,
-        selectedDay,
-        americanStandard,
-        min,
-        max,
-        ...args
-    }) {
-        const [state, dispatch] = useReducer(datePickerReducer, {
-            selectedYear,
-            selectedMonth,
-            selectedDay,
-            currentYear,
-            currentMonth,
-            currentDay: 1,
-            type: TypeOfCalendar.Days,
-            americanStandard,
-        } as State);
-
-        useEffect(() => {
-            dispatch(
-                setSelectedDate({
-                    year: selectedYear,
-                    month: selectedMonth,
-                    day: selectedDay,
-                }),
-            );
-        }, [selectedYear, selectedMonth, selectedDay]);
-
-        useEffect(() => {
-            dispatch(
-                setCurrentDate({
-                    year: currentYear,
-                    month: currentMonth,
-                }),
-            );
-        }, [currentYear, currentMonth]);
-
-        const store = useMemo(
-            () => ({
-                state,
-                dispatch,
-            }),
-            [state, dispatch],
-        );
-
-        return (
-            <DatePickerContext.Provider value={store}>
-                <Calendar
-                    {...args}
-                    render={(type) => {
-                        const CalendarBody = calendarBodies[type];
-                        return <CalendarBody min={min} max={max} />;
-                    }}
-                />
-            </DatePickerContext.Provider>
-        );
-    },
+    render: commonRender,
     args: {
         currentYear: 2023,
         currentMonth: 6,
@@ -327,17 +214,11 @@ export const CalendarWithMinMax: StoryObj<
         selectedMonth: 6,
         selectedDay: 21,
         americanStandard: false,
-        min: new Date(2023, 5, 1) as
-            | (string & Date)
-            | (number & Date)
-            | undefined,
-        max: new Date(2023, 5, 20) as
-            | (string & Date)
-            | (number & Date)
-            | undefined,
+        minDate: new Date(2023, 5, 1),
+        maxDate: new Date(2023, 5, 20),
     },
     argTypes: {
-        min: { control: { type: 'date' } },
-        max: { control: { type: 'date' } },
+        minDate: { control: { type: 'date' } },
+        maxDate: { control: { type: 'date' } },
     },
 };

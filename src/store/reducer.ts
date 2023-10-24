@@ -9,9 +9,8 @@ export interface State {
 
     currentYear: number;
     currentMonth: number;
-    currentDay: number;
 
-    americanStandard: false;
+    americanStandard: boolean;
     type: TypeOfCalendar;
 }
 
@@ -22,7 +21,6 @@ const initialState: State = {
 
     currentYear: 21,
     currentMonth: 6,
-    currentDay: 2023,
 
     americanStandard: false,
     type: TypeOfCalendar.Days,
@@ -45,7 +43,6 @@ export const datePickerReducer = (
             ...state,
             currentYear: payload?.year ?? state.currentYear,
             currentMonth: payload?.month ?? state.currentMonth,
-            currentDay: payload?.day ?? state.currentDay,
         };
     case 'RESET_DATE':
         return {
@@ -58,6 +55,11 @@ export const datePickerReducer = (
         return {
             ...state,
             type: payload,
+        };
+    case 'SET_AMERICAN_STANDARD':
+        return {
+            ...state,
+            americanStandard: payload,
         };
     default:
         return state as State;

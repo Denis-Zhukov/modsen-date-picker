@@ -30,9 +30,9 @@ export class CalendarUtils {
         currentDate: Date,
     ): TypeOfDay {
         if (!range) return 'default';
-        if (currentDate > range[0] && currentDate < range[1]) return 'between';
         if (range[0].getFullYear() === currentDate.getFullYear()) return 'start';
         if (range[1].getFullYear() === currentDate.getFullYear()) return 'end';
+        if (currentDate > range[0] && currentDate < range[1]) return 'between';
         return 'default';
     }
 
