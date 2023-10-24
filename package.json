@@ -1,7 +1,8 @@
 {
-  "name": "modsen-date-picker",
+  "name": "@hachiko_/modsen-date-picker",
   "type": "module",
   "version": "1.0.0",
+  "private": false,
   "main": "dist/cjs/index.js",
   "files": [
     "dist"
@@ -41,6 +42,7 @@
     "@babel/preset-react": "^7.22.15",
     "@babel/preset-typescript": "^7.23.0",
     "@rollup/plugin-alias": "^5.0.1",
+    "@rollup/plugin-image": "^3.0.3",
     "@storybook/addon-essentials": "7.5.1",
     "@storybook/addon-interactions": "7.5.1",
     "@storybook/addon-links": "7.5.1",

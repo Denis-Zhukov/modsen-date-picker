@@ -37,7 +37,6 @@ export const Default: StoryObj<FieldWithExtraPropsForDefault> = {
             selectedDay: null,
             currentYear: year,
             currentMonth: month,
-            currentDay: day,
         } as State);
 
         useEffect(() => {
@@ -78,6 +77,8 @@ interface FieldWithExtraPropsForWithCalendar extends FieldProps {
     selectedMonth: number;
     selectedDay: number;
     americanStandard: boolean;
+    minDate?: Date;
+    maxDate?: Date;
 }
 
 const FieldWithCalendar = withOpenCalendar(Field);
@@ -90,6 +91,8 @@ export const WithCalendar: StoryObj<FieldWithExtraPropsForWithCalendar> = {
         selectedYear,
         selectedDay,
         americanStandard,
+        minDate,
+        maxDate,
         ...args
     }) => {
         const [state, dispatch] = useReducer(datePickerReducer, {
@@ -100,6 +103,7 @@ export const WithCalendar: StoryObj<FieldWithExtraPropsForWithCalendar> = {
             currentMonth,
             currentDay: 1,
             type: TypeOfCalendar.Days,
+
             americanStandard,
         } as State);
 
@@ -134,6 +138,8 @@ export const WithCalendar: StoryObj<FieldWithExtraPropsForWithCalendar> = {
             <DatePickerContext.Provider value={store}>
                 <FieldWithCalendar
                     {...args}
+                    min={minDate as number & Date}
+                    max={maxDate as number & Date}
                     render={(type) => {
                         const CalendarBody = calendarBodies[type];
                         return <CalendarBody />;
@@ -149,5 +155,9 @@ export const WithCalendar: StoryObj<FieldWithExtraPropsForWithCalendar> = {
         selectedMonth: 6,
         selectedDay: 21,
         americanStandard: false,
+    },
+    argTypes: {
+        minDate: { control: { type: 'date' } },
+        maxDate: { control: { type: 'date' } },
     },
 };

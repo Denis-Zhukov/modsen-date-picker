@@ -3,15 +3,14 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
-import dts from 'rollup-plugin-dts';
-import image from 'rollup-plugin-image';
+import image from '@rollup/plugin-image';
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
 const packageJson = require('./package.json');
 
 export default [
     {
-        input: 'src/reducer.ts',
+        input: 'src/index.ts',
         output: [
             {
                 file: packageJson.main,
@@ -20,13 +19,20 @@ export default [
             },
         ],
         plugins: [
-            image({
-                extensions: /\.(png|jpg|jpeg|gif|svg)$/,
-                limit: 10000,
+            typescript({
+                exclude: [
+                    '**/__tests__',
+                    '**/*.test.ts',
+                    '**/stories',
+                    '**/*.stories.ts'
+                ],
             }),
-            typescript(),
             peerDepsExternal(),
-            resolve(),
+            resolve({
+                jsnext: true,
+                main: true,
+                browser: true,
+            }),
             commonjs(),
             terser(),
             commonjs(),
@@ -38,17 +44,7 @@ export default [
                     },
                 ],
             }),
+            image(),
         ],
-    },
-    {
-        input: 'dist/cjs/types/src/index.d.ts',
-        output: [
-            {
-                file: 'dist/index.d.ts',
-                format: 'esm',
-            },
-        ],
-        plugins: [dts.default()],
-        external: [/\.css$/],
     },
 ];
